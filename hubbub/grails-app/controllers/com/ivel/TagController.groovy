@@ -1,0 +1,8 @@
+package com.ivel
+
+class TagController {
+	
+	def scaffold = true
+	
+    def index = { }
+}

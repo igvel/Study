@@ -15,7 +15,6 @@ environments {
         dataSource {
             dbCreate = "update" // one of 'create', 'create-drop','update'
             url = "jdbc:hsqldb:file:devDb;shutdown=true"
-			loggingSql = true // this is to log all SQL to console
         }
     }
     test {

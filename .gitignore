@@ -4,3 +4,5 @@
 /hubbub/target
 /qotd/devDb.log
 /qotd/stacktrace.log
+/hubbub/devDb.properties
+/hubbub/devDb.script

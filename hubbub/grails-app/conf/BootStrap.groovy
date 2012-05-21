@@ -17,7 +17,7 @@ class BootStrap {
 	}
 
 	void createAdminUserIfRequired() {
-		if (!User.findByUserId("admin")) {
+		if (!com.ivel.User.findByUserId("admin")) {
 			println "Fresh Database. Creating ADMIN user."
 			def profile = new com.ivel.Profile(email: "admin@yourhost.com")
 			def user = new com.ivel.User(userId: "admin", password: "secret", profile: profile).save()

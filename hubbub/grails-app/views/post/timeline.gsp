@@ -5,6 +5,9 @@
 <meta name="layout" content="main" />
 </head>
 <body>
+	<h:lameBrowser userAgent="MSIE">
+		<p>Dude, Firefox really is better. No, really. </p>
+	</h:lameBrowser>
 	<div id="newPost">
 		<h3>
 			What is
@@ -31,7 +34,7 @@
 					${post.content}
 				</div>
 				<div class="postDate">
-					${post.dateCreated}
+					<h:dateFromNow date="${post.dateCreated}"/>
 				</div>
 			</div>
 		</g:each>

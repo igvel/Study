@@ -38,30 +38,45 @@ class UserController {
 
 	// direct binding of params
 	def register = {
-		def user = new User(params)
-		if (user.validate()) {
-			user.save()
-			flash.message = "Successfully Created User"
-			redirect(uri: '/')
-		} else {
-			flash.message = "Error Registering User"
-			return [ user: user ]
+		if (params) {
+			def user = new User(params)
+			if (user.validate()) {
+				user.save()
+				flash.message = "Successfully Created User"
+				redirect(uri: '/')
+			} else {
+				flash.message = "Error Registering User"
+				return [ user: user ]
+			}
 		}
 	}
 
 	// binding using command
 	def register2 = { UserRegistrationCommand urc ->
-		if (urc.hasErrors()) {
-			[user : urc]
-		} else {
-			def user = new User(urc.properties)
-			user.profile = new Profile(urc.properties)
-			if (user.save()) {
-				flash.message = "Welcome aboard, ${urc.fullName ?: urc.userId}"
-				redirect(uri: '/')
-			} else {
-				// maybe not unique userId?
+		if(urc) {
+			if (urc.hasErrors()) {
 				[user : urc]
+			} else {
+				def user = new User(urc.properties)
+				user.profile = new Profile(urc.properties)
+				if (user.save()) {
+					flash.message = "Welcome aboard, ${urc.fullName ?: urc.userId}"
+					redirect(uri: '/')
+				} else {
+					// maybe not unique userId?
+					[user : urc]
+				}
+			}
+		}
+	}
+	
+	def profile = {
+		if (params.id) {
+			def user = User.findByUserId(params.id)
+			if (user) {
+				return [ profile : user.profile, userId : user.userId ]
+			} else {
+				response.sendError(404)
 			}
 		}
 	}

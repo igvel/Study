@@ -2,6 +2,11 @@ package com.ivel
 
 class PostController {
 
+	static navigation = [
+		[group:'tabs', action:'timeline', title: 'My Timeline', order: 0],
+		[action: 'global', title: 'Global Timeline', order: 1]
+	]
+
 	def scaffold = true
 
 	def postService

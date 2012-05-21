@@ -3,6 +3,7 @@
 <head>
 	<title>Hubbub &raquo; <g:layoutTitle default="Welcome" /></title>
 	<link rel="stylesheet" 	href="<g:createLinkTo dir='css' file='hubbub.css'/>" />
+	<nav:resources/>
 	<g:layoutHead />
 </head>
 <body>
@@ -14,6 +15,7 @@
 		</div>
 		<div id="bd">
 			<!-- start body -->
+			<nav:render group="tabs"/>
 			<g:layoutBody />
 		</div>
 		<!-- end body -->

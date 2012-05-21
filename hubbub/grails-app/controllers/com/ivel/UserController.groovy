@@ -2,6 +2,12 @@ package com.ivel
 
 class UserController {
 
+	static navigation = [
+		[group:'tabs', action:'search', order: 90],
+		[action: 'advSearch', title: 'Advanced Search', order: 95],
+		[action: 'register', order: 99, isVisible: { true }]
+	]
+
 	def scaffold = true
 
 	def index = {
@@ -69,7 +75,7 @@ class UserController {
 			}
 		}
 	}
-	
+
 	def profile = {
 		if (params.id) {
 			def user = User.findByUserId(params.id)
@@ -94,7 +100,7 @@ class UserRegistrationCommand {
 	String timezone
 	String country
 	String jabberAddress
-	
+
 	static constraints = {
 		userId(size: 3..20)
 		password(size: 6..8, blank: false,

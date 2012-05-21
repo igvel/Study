@@ -4,5 +4,8 @@ class PostController {
 	
 	def scaffold = true
 	
-    def index = { }
+	def index = {
+		redirect(action: "list", params: params)
+	}
+
 }

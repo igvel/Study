@@ -64,5 +64,14 @@ class UserIntegrationTests extends GroovyTestCase {
 		assertEquals 2, glen.following.size()
 		sven.addToFollowing(peter)
 		assertEquals 1, sven.following.size()
+		
+	}
+	
+	void testHQLSearch() {
+		def glen = new User(userId: 'glen', password:'password').save()
+		def peter = new User(userId: 'guenter', password:'password').save()
+		def sven = new User(userId: 'sven', password:'password').save()
+		assertEquals 1, User.findAll("from User u where u.userId = ?", ["glen"]).size()
+		assertEquals 2, User.findAll("from User u where u.userId like :uid", [uid: "g%"]).size()
 	}
 }

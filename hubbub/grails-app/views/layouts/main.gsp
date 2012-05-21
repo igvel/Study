@@ -19,6 +19,7 @@
 		<!-- end body -->
 		<div id="ft">
 			<div id="footerText">Hubbub - Social Networking on Grails</div>
+			<div id="version">Version <g:meta name="app.version"/> on Grails <g:meta name="app.grails.version"/></div>
 		</div>
 	</div>
 </body>

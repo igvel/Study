@@ -1,0 +1,21 @@
+package com.ivel
+
+class PostService {
+
+	static transactional = true
+
+	Post createPost(String userId, String content) {
+		def user = User.findByUserId(userId)
+		if (user) {
+			def post = new Post(content: content)
+			user.addToPosts(post)
+			if (user.save()) {
+				return post
+			} else {
+				throw new PostException(
+				message: "Invalid or empty post", post: post)
+			}
+		}
+		throw new PostException(message: "Invalid User Id")
+	}
+}

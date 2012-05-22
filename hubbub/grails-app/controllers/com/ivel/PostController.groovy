@@ -1,44 +1,108 @@
 package com.ivel
 
+import grails.converters.*
+
 class PostController {
-
-	def int MAX_ENTRIES_PER_PAGE = 5
-
-	static navigation = [
-		[group:'tabs', action:'timeline', title: 'My Timeline', order: 0],
-		[action: 'global', title: 'Global Timeline', order: 1]
-	]
-
-	def scaffold = true
 
 	def postService
 
+	def scaffold = true
+
+	static navigation = [
+		[group: 'tabs', action: 'personal', title: 'My Posts', order: 0],
+		[action:'timeline', title: 'My Timeline', order: 1],
+		[action: 'global', title: 'Everyone', order: 2],
+	]
+
 	def index = {
-		if (!params.id)
-			params.id = "chuck_norris"
 		redirect(action: 'timeline', params: params)
 	}
 
-	def timeline = {
-		if (!params.max)
-			params.max = MAX_ENTRIES_PER_PAGE
-		if (!params.offset)
-			params.offset = 0
-
-		def user = User.findByUserId(params.id)
-		def postCount = Post.countByUser(user)
-		def posts = Post.findAllByUser(user, params)
-		return [user: user, posts: posts, postCount: postCount]
+	def global = {
+		def (posts, postCount) = postService.getGlobalTimelineAndCount(params)
+		[ posts : posts, postCount : postCount ]
 	}
+
+	def timeline = {
+		def user = User.get(session.user.id)
+		def (posts, postCount) = postService.getUserTimelineAndCount(user.userId, params)
+		[ user : user, posts : posts, postCount : postCount ]
+	}
+
+	def personal = {
+
+		def user = params.id ? User.findByUserId(params.id) : session.user
+		if (!user) {
+			response.sendError(404)
+		}
+		def (posts, postCount) = postService.getUserPosts(user.userId, params)
+
+		[ user : user, posts : posts, postCount : postCount ]
+	}
+
+
 
 	def addPost = {
 		try {
-			def newPost = postService.createPost(params.id, params.content)
+			def newPost = postService.createPost(session.user.userId, params.content)
 			flash.message = "Added new post: ${newPost.content}"
 		} catch (PostException pe) {
 			flash.message = pe.message
-			log.error "Failed to add new post", pe
 		}
 		redirect(action: 'timeline', id: params.id)
+	}
+
+	def addPostAjax = {
+		try {
+			def newPost = postService.createPost(session.user.userId, params.content)
+			def posts
+			def postCount
+			switch(params.timelineToReturn) {
+				case "global":
+					(posts, postCount) = postService.getGlobalTimelineAndCount(params)
+					break
+				case "mytimeline":
+					(posts, postCount) = postService.getUserTimelineAndCount(session.user.userId, params)
+					break
+				case "myposts":
+					(posts, postCount) = postService.getUserPosts(session.user.userId, params)
+					break
+			}
+			println "postCount is ${postCount}"
+			render(template:"postentries", collection: posts, var: 'post')
+		} catch (PostException pe) {
+			render {
+				div(class:"errors", pe.message)
+			}
+		}
+	}
+
+	def tinyurl = {
+		def origUrl = params?.fullUrl?.encodeAsURL()
+		def tinyUrl = new URL("http://tinyurl.com/api-create.php?url=${origUrl}").text
+		render(contentType:"application/json") {
+			urls(small: tinyUrl, full: params.fullUrl)
+		}
+	}
+
+
+	def recentPosts = {
+
+		def user = User.findByUserId(params.id)
+		def posts = Post.findAllByUser(user, [max: 5])
+
+		withFormat {
+			js {
+				render(contentType:"text/json") {
+					hubbubPosts(user: user.userId) {
+						posts.each { p ->
+							post(contents: p.content,
+									created:p.dateCreated)
+						}
+					}
+				}
+			}
+			xml { render posts.encodeAsXML() }
+		}
 	}
 }

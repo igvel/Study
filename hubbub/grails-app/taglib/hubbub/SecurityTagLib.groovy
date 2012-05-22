@@ -1,3 +1,5 @@
+package hubbub
+
 class SecurityTagLib {
     def isLoggedIn = { attrs, body ->
         if (session.user) {

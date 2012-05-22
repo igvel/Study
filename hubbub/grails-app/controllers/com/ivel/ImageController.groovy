@@ -2,6 +2,8 @@ package com.ivel
 
 class ImageController {
 
+	def imageService
+	
 	// this is for storing image into DB
 	def upload = { PhotoUploadCommand puc ->
 		def user = User.findByUserId(puc.userId)
@@ -38,6 +40,18 @@ class ImageController {
 					))
 		}
 	}
+	
+	    def tiny = {
+        if (params.id) {
+            def image = imageService.getUserTinyThumbnail(params.id)
+            response.setContentLength(image.length)
+            response.getOutputStream().write(image)
+        } else {
+            response.sendError(404)
+        }
+
+    }
+
 }
 
 class PhotoUploadCommand {

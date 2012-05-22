@@ -28,7 +28,7 @@
 		</p>
 	</div>
 	<div class="allPosts">
-		<g:each in="${user.posts}" var="post">
+		<g:each in="${posts}" var="post">
 			<div class="postEntry">
 				<div class="postText">
 					${post.content}
@@ -38,6 +38,7 @@
 				</div>
 			</div>
 		</g:each>
+		<g:paginate total="${postCount}" id="${params.id}"/>
 	</div>
 </body>
 </html>

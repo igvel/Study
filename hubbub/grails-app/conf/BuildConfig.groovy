@@ -29,3 +29,5 @@ grails.project.dependency.resolution = {
         // runtime 'mysql:mysql-connector-java:5.1.13'
     }
 }
+// Port to run at
+grails.server.port.http=9000

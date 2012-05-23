@@ -23,6 +23,6 @@ class User {
 	static mapping = {
 		profile lazy: false
 		// profile fetch: 'join'
-		//posts sort:'dateCreated'
+		posts sort:'dateCreated', order:'desc'
 	}
 }

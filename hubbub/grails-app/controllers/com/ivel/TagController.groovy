@@ -1,8 +1,9 @@
 package com.ivel
 
 class TagController {
+
+    def scaffold = true
 	
-	def scaffold = true
-	
-    def index = { }
+    def defaultAction = 'list'
+
 }

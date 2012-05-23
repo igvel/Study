@@ -4,5 +4,6 @@ class ProfileController {
 	
 	def scaffold = true
 	
-    def index = { }
+	def defaultAction = 'list'
+
 }
